@@ -1,29 +1,42 @@
 import Fastify from 'fastify';
 import * as ical from 'ical.js';
+import { Isolate, ExternalCopy } from 'isolated-vm';
 import get from 'axios';
+
+const scriptsMemoryLimitInMb = 64;
+const scriptsTimeoutInMs = 30000;
 
 const fastify = Fastify({
 	logger: true
 });
 
 interface V0Querystring {
-	s: string;
-	keep: string;
+	ical: string;
+	js: string;
+}
+
+function jCal2iCalString(jCal: any): string {
+	return new ical.Component(jCal).toString();
 }
 
 fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, reply) {
-	let icalResponse = await get(request.query.s, { responseType: 'text' });
+	let isolate = new Isolate({ memoryLimit: scriptsMemoryLimitInMb, });
+	let context = isolate.createContextSync();
+	let global = context.global;
+	global.setSync('global', global.derefInto());
+
+	let icalResponse = await get(request.query.ical, { responseType: 'text' });
 	var icalRaw = icalResponse.data;
-	var iCalContents = ical.parse(icalRaw);
-	let subcomponents = iCalContents[2];
-	let filteredSubcomponents = subcomponents.filter((data: any) => {
-		let subcomponent = new ical.Component(data);
-		let summary = subcomponent.getFirstPropertyValue('summary');
-		return subcomponent.name != 'vevent' || summary.includes(request.query.keep);
-	});
-	iCalContents[2] = filteredSubcomponents;
-	let filteredCalendar = new ical.Component(iCalContents);
-	reply.code(200).header('Content-type', 'text/calendar').send(filteredCalendar.toString());
+	var jCalData = ical.parse(icalRaw);
+
+	global.setSync('calendar', jCalData, { copy: true });
+	context.evalSync(request.query.js, { timeout: scriptsTimeoutInMs });
+	let newCalendar = context.evalSync('calendar', { timeout: scriptsTimeoutInMs, copy: true });
+	console.log(request.query.js);
+	console.log(newCalendar);
+
+	reply.code(200).header('Content-type', 'text/calendar').send(jCal2iCalString(newCalendar));
+	isolate.dispose();
 })
 
 fastify.listen({ port: 3000 }, function (err, address) {
