@@ -2,6 +2,9 @@ import Fastify from 'fastify';
 import * as ical from 'ical.js';
 import { Isolate, ExternalCopy } from 'isolated-vm';
 import get from 'axios';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const scriptsMemoryLimitInMb = 64;
 const scriptsTimeoutInMs = 30000;
@@ -20,18 +23,18 @@ function jCal2iCalString(jCal: any): string {
 }
 
 fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, reply) {
-	let isolate = new Isolate({ memoryLimit: scriptsMemoryLimitInMb, });
-	let context = isolate.createContextSync();
-	let global = context.global;
+	const isolate = new Isolate({ memoryLimit: scriptsMemoryLimitInMb, });
+	const context = isolate.createContextSync();
+	const global = context.global;
 	global.setSync('global', global.derefInto());
 
-	let icalResponse = await get(request.query.ical, { responseType: 'text' });
-	var icalRaw = icalResponse.data;
-	var jCalData = ical.parse(icalRaw);
+	const icalResponse = await get(request.query.ical, { responseType: 'text' });
+	const icalRaw = icalResponse.data;
+	const jCalData = ical.parse(icalRaw);
 
 	global.setSync('calendar', jCalData, { copy: true });
 	context.evalSync(request.query.js, { timeout: scriptsTimeoutInMs });
-	let newCalendar = context.evalSync('calendar', { timeout: scriptsTimeoutInMs, copy: true });
+	const newCalendar = context.evalSync('calendar', { timeout: scriptsTimeoutInMs, copy: true });
 	console.log(request.query.js);
 	console.log(newCalendar);
 
@@ -39,7 +42,7 @@ fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, rep
 	isolate.dispose();
 });
 
-fastify.listen(process.env.PORT, '0.0.0.0', function (err, address) {
+fastify.listen(process.env.PORT!, (err, address) => {
 	if (err) {
 		fastify.log.error(err);
 	}
