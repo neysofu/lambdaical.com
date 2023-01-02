@@ -37,9 +37,9 @@ fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, rep
 
 	reply.code(200).header('Content-type', 'text/calendar').send(jCal2iCalString(newCalendar));
 	isolate.dispose();
-})
+});
 
-fastify.listen({ port: 3000 }, function (err, address) {
+fastify.listen(process.env.PORT, '0.0.0.0', function (err, address) {
 	if (err) {
 		fastify.log.error(err);
 	}
