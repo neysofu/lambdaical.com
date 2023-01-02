@@ -2,9 +2,6 @@ import Fastify from 'fastify';
 import * as ical from 'ical.js';
 import { Isolate, ExternalCopy } from 'isolated-vm';
 import get from 'axios';
-import * as dotenv from 'dotenv';
-
-//dotenv.config();
 
 const scriptsMemoryLimitInMb = 64;
 const scriptsTimeoutInMs = 30000;
@@ -42,7 +39,7 @@ fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, rep
 	isolate.dispose();
 });
 
-fastify.listen(80, (err, address) => {
+fastify.listen(process.env.PORT!, (err, address) => {
 	if (err) {
 		fastify.log.error(err);
 	}
