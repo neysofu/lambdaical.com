@@ -4,7 +4,7 @@ import { Isolate, ExternalCopy } from 'isolated-vm';
 import get from 'axios';
 import * as dotenv from 'dotenv';
 
-dotenv.config();
+//dotenv.config();
 
 const scriptsMemoryLimitInMb = 64;
 const scriptsTimeoutInMs = 30000;
