@@ -19,6 +19,10 @@ function jCal2iCalString(jCal: any): string {
 	return new ical.Component(jCal).toString();
 }
 
+fastify.get('/v0/ping', async function (request, reply) {
+	reply.send('Hello, world!');
+});
+
 fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, reply) {
 	const isolate = new Isolate({ memoryLimit: scriptsMemoryLimitInMb, });
 	const context = isolate.createContextSync();
