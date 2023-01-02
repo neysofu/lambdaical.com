@@ -42,7 +42,7 @@ fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, rep
 	isolate.dispose();
 });
 
-fastify.listen(process.env.PORT!, (err, address) => {
+fastify.listen(80, (err, address) => {
 	if (err) {
 		fastify.log.error(err);
 	}
