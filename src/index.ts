@@ -46,4 +46,4 @@ fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, rep
 	isolate.dispose();
 });
 
-fastify.listen(process.env.PORT || 8080);
+fastify.listen(process.env.PORT || 8080, '0.0.0.0');
