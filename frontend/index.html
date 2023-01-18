@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<meta charset="utf-8">
+	<title>λ iCal</title>
+	<meta name="description" content="Customize your calendars with JavaScript">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta property="og:title" content="">
+	<meta property="og:type" content="">
+	<meta property="og:url" content="">
+	<meta property="og:image" content="">
+
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+	<script src="https://code.jquery.com/jquery-3.6.3.slim.min.js"
+		integrity="sha256-ZwqZIVdD3iXNyGHbSYdsmWP//UBokj2FHAxKuSBKDSo=" crossorigin="anonymous"></script>
+</head>
+
+<body class="has-background-light">
+	<section class="section">
+		<div class="container">
+			<h1 class="title">
+				λiCal.com
+			</h1>
+			<p class="subtitle">
+				Whenever you want to subscribe to a calendar, you have two options:
+			</p>
+			<ul>
+				<li>Add the calendar's url to the list of external calendars in your calendar viewer. You will receive
+					updates, but won't be able to delete events you are not interested in.</li>
+				<li>Take a copy of the calendar and import it in your calendar viewer. You will be able to delete events
+					you are not interested in, but you won't receive any updates.</li>
+			</ul>
+
+			<p>
+				Well, λiCal.com solves this problem by allowing you to customize
+				your calendars with JavaScript. Your calendar will be available in
+				the jCal format in the `calendar` variable, and you can access
+				https://github.com/kewisch/ical.js/ with `ICAL`.
+
+			</p>
+			<form>
+				<div class="field">
+					<label class="label">Original iCalendar URL. <code>webcal://</code>, <code>http://</code> and
+						<code>https://</code> are accepted.</label>
+					<div class="control">
+						<input id="original-calendar-url" class="input" type="text"
+							placeholder="Your original iCalendar URL">
+					</div>
+				</div>
+
+				<div class="field">
+					<label class="label">Your JavaScript code.</label>
+					<div class="control">
+						<textarea id="user-provided-js" class="textarea" placeholder="Your JavaScript code here"
+							rows="10"></textarea>
+					</div>
+				</div>
+			</form>
+
+			<p>Your link is: <span id="generated-url">https://example.com</span></p>
+
+			<script>
+				// code to change generated url with https://api.lambdaical.com/?url=URL&js=JS every time the form is changed. Query parameters are base64 encoded.
+
+				$("#original-calendar-url").on("input", function () {
+					$("#generated-url").text("https://api.lambdaical.com/?url=" + encodeURIComponent($("#original-calendar-url").val()) + "&js=" + encodeURIComponent($("#user-provided-js").val()));
+				});
+
+
+			</script>
+
+			<div id="disqus_thread"></div>
+			<script>
+				/**
+				*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+				*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+				var disqus_config = function () {
+					this.page.url = 'https://lambdaical.com';  // Replace PAGE_URL with your page's canonical URL variable
+					this.page.identifier = 'homepage'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+				};
+
+				(function () { // DON'T EDIT BELOW THIS LINE
+					var d = document, s = d.createElement('script');
+					s.src = 'https://l-ical.disqus.com/embed.js';
+					s.setAttribute('data-timestamp', +new Date());
+					(d.head || d.body).appendChild(s);
+				})();
+			</script>
+			<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered
+					by Disqus.</a></noscript>
+		</div>
+	</section>
+
+	<script id="dsq-count-scr" src="//l-ical.disqus.com/count.js" async></script>
+
+</body>
+
+</html>
