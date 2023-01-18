@@ -68,7 +68,7 @@
 				// code to change generated url with https://api.lambdaical.com/?url=URL&js=JS every time the form is changed. Query parameters are base64 encoded.
 
 				$("#original-calendar-url").on("input", function () {
-					$("#generated-url").text("https://api.lambdaical.com/?url=" + encodeURIComponent($("#original-calendar-url").val()) + "&js=" + encodeURIComponent($("#user-provided-js").val()));
+					$("#generated-url").text("https://ical.lambdaical.com/v0/?ical=" + encodeURIComponent($("#original-calendar-url").val()) + "&js=" + encodeURIComponent($("#user-provided-js").val()));
 				});
 
 
