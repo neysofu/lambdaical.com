@@ -1,5 +1,4 @@
 import Fastify from 'fastify';
-import * as ical from 'ical.js';
 import { Isolate, ExternalCopy } from 'isolated-vm';
 import get from 'axios';
 import * as fs from 'fs';
