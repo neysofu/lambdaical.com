@@ -5,6 +5,7 @@ import * as fs from 'fs';
 
 const scriptsMemoryLimitInMb = 64;
 const scriptsTimeoutInMs = 50000;
+const icalJsLocation = require.resolve('ical.js/build/ical.min.js');
 
 const fastify = Fastify({
 	logger: true
@@ -25,7 +26,7 @@ fastify.get<{ Querystring: V0Querystring }>('/v0/', async function (request, rep
 	const global = context.global;
 	global.setSync('global', global.derefInto());
 
-	let code = fs.readFileSync("/home/neysofu/repos/lambdaical.com/node_modules/ical.js/build/ical.min.js");
+	let code = fs.readFileSync(icalJsLocation);
 	isolate.compileScriptSync(code.toString()).runSync(context);
 
 	const icalResponse = await get(request.query.ical, { responseType: 'text' });
